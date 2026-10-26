@@ -6,15 +6,25 @@
 
 <h1>Index</h1>
 
+
 <form asp-controller="Movies" asp-action="Index" method="get">
     <p>
         <label>
             Title:
             <input type="text" name="SearchString" />
         </label>
+
+        <label>
+            Genre:
+            <select name="MovieGenre" asp-items="ViewBag.MovieGenre">
+                <option value="">All</option>
+            </select>
+        </label>
+
         <input type="submit" value="Filter" />
     </p>
 </form>
+
 
 <p>
     <a asp-action="Create">Create New</a>

@@ -21,11 +21,18 @@ namespace MvcMovie.Controllers
 
         // GET: Movies
         
-public async Task<IActionResult> Index(string searchString)
+
+public async Task<IActionResult> Index(string movieGenre, string searchString)
 {
+    // Retrieve all genres for the dropdown.
+    IQueryable<string> genreQuery = from m in _context.Movie
+                                    orderby m.Genre
+                                    select m.Genre!;
+
     var movies = from m in _context.Movie
                  select m;
 
+    // Filter by title.
     if (!string.IsNullOrEmpty(searchString))
     {
         movies = movies.Where(m =>
@@ -33,8 +40,18 @@ public async Task<IActionResult> Index(string searchString)
             m.Title.ToUpper().Contains(searchString.ToUpper()));
     }
 
+    // Filter by genre.
+    if (!string.IsNullOrEmpty(movieGenre))
+    {
+        movies = movies.Where(m => m.Genre == movieGenre);
+    }
+
+    ViewBag.MovieGenre = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(
+        await genreQuery.Distinct().ToListAsync());
+
     return View(await movies.ToListAsync());
 }
+
 
 
         // GET: Movies/Details/5
